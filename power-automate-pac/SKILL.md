@@ -37,6 +37,222 @@ requires: power-automate-connectors
 > connector(s) you will touch (SharePoint, Outlook, Excel, OneDrive, Forms,
 > Approvals, Dataverse, etc.). Keep that reference open while you build.
 
+> ## ⛔ HARD RULE: STRICT XML TEMPLATE ENFORCEMENT
+>
+> **Never generate Dataverse solution XML structures from memory.** This rule
+> applies to three file types: `Other/Solution.xml`, `Other/Customizations.xml`,
+> and every `Workflows/*.json.data.xml`.
+>
+> Why: AI agents frequently hallucinate missing or incorrect tags, attribute
+> names, attribute orderings, namespaces, and parent nodes when writing these
+> XMLs freehand. PAC's `solution pack` accepts the file, the import even
+> succeeds, but the flow then fails to render, save, or activate with errors
+> that don't point at the malformed XML.
+>
+> Rules — no exceptions:
+> 1. **To create one of these files: copy the matching boilerplate below
+>    verbatim** and string-replace only the `ALL_CAPS_PLACEHOLDERS`. Do NOT
+>    re-derive the structure from what XML "should look like."
+> 2. **To modify one of these files: read the existing file first, then perform
+>    a targeted Edit on the specific node** (e.g. add a new `<RootComponent>`
+>    line, bump the `<Version>`). Do NOT regenerate the surrounding scaffold
+>    from memory.
+> 3. When a target solution already exists, **export, unpack, edit in place,
+>    repack.** The exported XML from PAC is the authoritative shape for that
+>    environment — prefer it over the boilerplates here.
+> 4. The placeholders below are **the only fields you should be modifying.**
+>    Every other tag, attribute, and value must remain as in the template
+>    unless the user explicitly says otherwise.
+>
+> Sources for the boilerplates: cross-referenced from verified Dataverse
+> exports in [`pnp/powerplatform-samples`](https://github.com/pnp/powerplatform-samples)
+> (`leave-request`, `sharepoint-followsites`, `patch-tuesday` samples) and
+> locally-imported, working solutions.
+>
+> ### Boilerplate A — `Other/Solution.xml`
+>
+> ```xml
+> <?xml version="1.0" encoding="utf-8"?>
+> <ImportExportXml version="9.2.24032.204" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+>   <SolutionManifest>
+>     <UniqueName>SOLUTION_UNIQUE_NAME</UniqueName>
+>     <LocalizedNames>
+>       <LocalizedName description="SOLUTION_DISPLAY_NAME" languagecode="1033" />
+>     </LocalizedNames>
+>     <Descriptions />
+>     <Version>SOLUTION_VERSION</Version>
+>     <Managed>MANAGED_FLAG</Managed>
+>     <Publisher>
+>       <UniqueName>PUBLISHER_UNIQUE_NAME</UniqueName>
+>       <LocalizedNames>
+>         <LocalizedName description="PUBLISHER_DISPLAY_NAME" languagecode="1033" />
+>       </LocalizedNames>
+>       <Descriptions />
+>       <EMailAddress xsi:nil="true"></EMailAddress>
+>       <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
+>       <CustomizationPrefix>PUBLISHER_PREFIX</CustomizationPrefix>
+>       <CustomizationOptionValuePrefix>PUBLISHER_OPTION_VALUE_PREFIX</CustomizationOptionValuePrefix>
+>       <Addresses>
+>         <Address>
+>           <AddressNumber>1</AddressNumber>
+>           <AddressTypeCode>1</AddressTypeCode>
+>           <City xsi:nil="true"></City>
+>           <County xsi:nil="true"></County>
+>           <Country xsi:nil="true"></Country>
+>           <Fax xsi:nil="true"></Fax>
+>           <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+>           <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+>           <Latitude xsi:nil="true"></Latitude>
+>           <Line1 xsi:nil="true"></Line1>
+>           <Line2 xsi:nil="true"></Line2>
+>           <Line3 xsi:nil="true"></Line3>
+>           <Longitude xsi:nil="true"></Longitude>
+>           <Name xsi:nil="true"></Name>
+>           <PostalCode xsi:nil="true"></PostalCode>
+>           <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+>           <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+>           <ShippingMethodCode>1</ShippingMethodCode>
+>           <StateOrProvince xsi:nil="true"></StateOrProvince>
+>           <Telephone1 xsi:nil="true"></Telephone1>
+>           <Telephone2 xsi:nil="true"></Telephone2>
+>           <Telephone3 xsi:nil="true"></Telephone3>
+>           <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+>           <UPSZone xsi:nil="true"></UPSZone>
+>           <UTCOffset xsi:nil="true"></UTCOffset>
+>           <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+>         </Address>
+>         <Address>
+>           <AddressNumber>2</AddressNumber>
+>           <AddressTypeCode>1</AddressTypeCode>
+>           <City xsi:nil="true"></City>
+>           <County xsi:nil="true"></County>
+>           <Country xsi:nil="true"></Country>
+>           <Fax xsi:nil="true"></Fax>
+>           <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+>           <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+>           <Latitude xsi:nil="true"></Latitude>
+>           <Line1 xsi:nil="true"></Line1>
+>           <Line2 xsi:nil="true"></Line2>
+>           <Line3 xsi:nil="true"></Line3>
+>           <Longitude xsi:nil="true"></Longitude>
+>           <Name xsi:nil="true"></Name>
+>           <PostalCode xsi:nil="true"></PostalCode>
+>           <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+>           <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+>           <ShippingMethodCode>1</ShippingMethodCode>
+>           <StateOrProvince xsi:nil="true"></StateOrProvince>
+>           <Telephone1 xsi:nil="true"></Telephone1>
+>           <Telephone2 xsi:nil="true"></Telephone2>
+>           <Telephone3 xsi:nil="true"></Telephone3>
+>           <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+>           <UPSZone xsi:nil="true"></UPSZone>
+>           <UTCOffset xsi:nil="true"></UTCOffset>
+>           <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+>         </Address>
+>       </Addresses>
+>     </Publisher>
+>     <RootComponents>
+>       <!-- Repeat one <RootComponent> line per component the solution carries. -->
+>       <!-- type values: 1=Entity, 29=Workflow (cloud flow), 60=SystemForm, 61=WebResource, 62=AppModule, 80=SiteMap, 300=AppTemplate -->
+>       <!-- For workflows/cloud flows the id is the WorkflowId GUID in lowercase, with curly braces. -->
+>       <RootComponent type="29" id="{LOWERCASE_FLOW_GUID}" behavior="0" />
+>     </RootComponents>
+>     <MissingDependencies />
+>   </SolutionManifest>
+> </ImportExportXml>
+> ```
+>
+> Placeholder reference (Boilerplate A):
+> - `SOLUTION_UNIQUE_NAME` — internal name, no spaces, e.g. `LeaveRequestApproval`
+> - `SOLUTION_DISPLAY_NAME` — human-readable, e.g. `Leave Request Approval`
+> - `SOLUTION_VERSION` — `MAJOR.MINOR.BUILD.REVISION`, e.g. `1.0.0.0`. Bump on each redeploy.
+> - `MANAGED_FLAG` — `0` unmanaged, `1` managed, `2` template/holding
+> - `PUBLISHER_UNIQUE_NAME` — e.g. `Alvin`
+> - `PUBLISHER_DISPLAY_NAME` — e.g. `Alvin`
+> - `PUBLISHER_PREFIX` — lowercase 2-8 chars, e.g. `alv`
+> - `PUBLISHER_OPTION_VALUE_PREFIX` — 5-digit integer assigned to the publisher (visible in the maker portal under Publisher details)
+> - `LOWERCASE_FLOW_GUID` — the flow's `WorkflowId` GUID, lowercase, no curly braces
+>
+> ### Boilerplate B — `Other/Customizations.xml`
+>
+> ```xml
+> <?xml version="1.0" encoding="utf-8"?>
+> <ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+>   <Entities />
+>   <Roles />
+>   <Workflows />
+>   <FieldSecurityProfiles />
+>   <Templates />
+>   <EntityMaps />
+>   <EntityRelationships />
+>   <OrganizationSettings />
+>   <optionsets />
+>   <CustomControls />
+>   <EntityDataProviders />
+>   <connectionreferences>
+>     <!-- Repeat one <connectionreference> block per connection reference shipped IN this solution. -->
+>     <connectionreference connectionreferencelogicalname="CONNREF_LOGICAL_NAME">
+>       <connectionreferencedisplayname>CONNREF_DISPLAY_NAME</connectionreferencedisplayname>
+>       <connectorid>/providers/Microsoft.PowerApps/apis/CONNECTOR_API_NAME</connectorid>
+>       <iscustomizable>1</iscustomizable>
+>       <statecode>0</statecode>
+>       <statuscode>1</statuscode>
+>     </connectionreference>
+>   </connectionreferences>
+>   <Languages>
+>     <Language>1033</Language>
+>   </Languages>
+> </ImportExportXml>
+> ```
+>
+> Placeholder reference (Boilerplate B):
+> - `CONNREF_LOGICAL_NAME` — Dataverse schema name, prefixed with the publisher prefix, e.g. `alv_SharedApprovals` or `alv_sharedoffice365_abcde`. Casing is preserved by Dataverse — pick once and stick with it.
+> - `CONNREF_DISPLAY_NAME` — human-readable, e.g. `Standard Approvals`
+> - `CONNECTOR_API_NAME` — `shared_<connector>` value such as `shared_approvals`, `shared_office365`, `shared_office365users`, `shared_microsoftforms`, `shared_sharepointonline`, `shared_onedriveforbusiness`, `shared_excelonlinebusiness`. Verify against the `power-automate-connectors` skill.
+> - `<Languages><Language>1033</Language></Languages>` — `1033` = English (US). Optional but standard.
+>
+> ### Boilerplate C — `Workflows/<NAME>-<UPPERCASE_GUID>.json.data.xml`
+>
+> ```xml
+> <?xml version="1.0" encoding="utf-8"?>
+> <Workflow WorkflowId="{LOWERCASE_FLOW_GUID}" Name="FLOW_DISPLAY_NAME" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+>   <JsonFileName>/Workflows/FLOW_FILE_NAME-UPPERCASE_FLOW_GUID.json</JsonFileName>
+>   <Type>1</Type>
+>   <Subprocess>0</Subprocess>
+>   <Category>5</Category>
+>   <Mode>0</Mode>
+>   <Scope>4</Scope>
+>   <OnDemand>0</OnDemand>
+>   <TriggerOnCreate>0</TriggerOnCreate>
+>   <TriggerOnDelete>0</TriggerOnDelete>
+>   <AsyncAutodelete>0</AsyncAutodelete>
+>   <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+>   <StateCode>STATE_CODE</StateCode>
+>   <StatusCode>STATUS_CODE</StatusCode>
+>   <RunAs>1</RunAs>
+>   <IsTransacted>1</IsTransacted>
+>   <IntroducedVersion>1.0</IntroducedVersion>
+>   <IsCustomizable>1</IsCustomizable>
+>   <BusinessProcessType>0</BusinessProcessType>
+>   <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+>   <ModernFlowType>0</ModernFlowType>
+>   <PrimaryEntity>none</PrimaryEntity>
+>   <LocalizedNames>
+>     <LocalizedName languagecode="1033" description="FLOW_DISPLAY_NAME" />
+>   </LocalizedNames>
+> </Workflow>
+> ```
+>
+> Placeholder reference (Boilerplate C):
+> - `LOWERCASE_FLOW_GUID` — the flow's GUID, lowercase, with curly braces in `WorkflowId="{...}"`
+> - `FLOW_DISPLAY_NAME` — human-readable, e.g. `Leave Request Approval Flow`
+> - `FLOW_FILE_NAME` — the JSON filename's stem (no spaces), e.g. `LeaveRequestApprovalFlow`
+> - `UPPERCASE_FLOW_GUID` — the same GUID, uppercase, no braces — must match the actual `.json` filename's GUID
+> - `STATE_CODE` / `STATUS_CODE`:
+>   - `0` / `1` → **Draft** (flow imports disabled; safe default for test deployments)
+>   - `1` / `2` → **Activated** (flow imports running)
+> - Constants (do not change unless you know why): `Type=1`, `Category=5`, `Mode=0`, `Scope=4`, `RunAs=1`, `IsTransacted=1`, `ModernFlowType=0`, `BusinessProcessType=0`, `PrimaryEntity=none`. These hold for standard cloud flows.
+
 This skill teaches you the full lifecycle: authenticate → export solution → unpack → edit flow JSON → pack → import. It also documents the JSON schema for triggers, actions, runAfter chains, scope rules, connection references, expressions, and every gotcha worth knowing.
 
 **See also:** the `power-automate-connectors` skill is the authoritative action catalog and MUST be used alongside this skill (see the HARD RULE above). This skill covers the *workflow and JSON structure*; that skill covers *which actions and parameters actually exist*.
@@ -154,6 +370,8 @@ The solution manifest. Key parts:
 - `<Publisher>` — has `<CustomizationPrefix>` (the prefix on custom schema names, e.g. `contoso`)
 - `<RootComponents>` — every component the solution carries, by GUID + type. **Adding a new flow requires adding a new `<RootComponent type="29" id="{lowercase-guid}" behavior="0" />` line here.** Type 29 = workflow.
 
+> **To create or modify this file, use [Boilerplate A](#boilerplate-a--othersolutionxml) per the STRICT XML TEMPLATE ENFORCEMENT hard rule. Do not write the file structure from memory.**
+
 ### 3.2 `Workflows/<Name>-<GUID>.json` — the flow definition
 
 The outer wrapper:
@@ -181,9 +399,13 @@ Per-flow XML carrying the Dataverse workflow record properties. Key fields:
 - `<ModernFlowType>0`, `<PrimaryEntity>none` — for non-Dataverse-triggered cloud flows
 - `<IsCustomizable>1`, `<IsCustomProcessingStepAllowedForOtherPublishers>1` — leave true unless deliberately locking
 
+> **To create this file, use [Boilerplate C](#boilerplate-c--workflowsname-uppercase_guidjsondataxml) per the STRICT XML TEMPLATE ENFORCEMENT hard rule. Do not write the file structure from memory.**
+
 ### 3.4 `connectionreferences/<logicalName>.json`
 
 Only present for connection references defined IN this solution. Their schema name (e.g. `<prefix>_SharePointConnRef`) is what the flow's `connectionReferenceLogicalName` field points at. Note: Dataverse **preserves the exact casing** of the schema name once created (including camelCase) — don't rename casually.
+
+> Connection references are declared inside `Other/Customizations.xml`'s `<connectionreferences>` block — **use [Boilerplate B](#boilerplate-b--othercustomizationsxml) per the STRICT XML TEMPLATE ENFORCEMENT hard rule. Do not write the file structure from memory.**
 
 ---
 
@@ -478,29 +700,13 @@ The two are NOT interchangeable; using `@variables(...)` inside a longer string 
 }
 ```
 
-Pair it with a `.json.data.xml`:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{<lowercase-guid>}" Name="My New Flow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <JsonFileName>/Workflows/MyNewFlow-<UPPERGUID>.json</JsonFileName>
-  <Type>1</Type><Subprocess>0</Subprocess><Category>5</Category><Mode>0</Mode><Scope>4</Scope>
-  <OnDemand>0</OnDemand><TriggerOnCreate>0</TriggerOnCreate><TriggerOnDelete>0</TriggerOnDelete>
-  <AsyncAutodelete>0</AsyncAutodelete><SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-  <StateCode>0</StateCode><StatusCode>1</StatusCode>
-  <RunAs>1</RunAs><IsTransacted>1</IsTransacted><IntroducedVersion>1.0</IntroducedVersion>
-  <IsCustomizable>1</IsCustomizable><BusinessProcessType>0</BusinessProcessType>
-  <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
-  <ModernFlowType>0</ModernFlowType><PrimaryEntity>none</PrimaryEntity>
-  <LocalizedNames>
-    <LocalizedName languagecode="1033" description="My New Flow" />
-  </LocalizedNames>
-</Workflow>
-```
+Pair it with a `.json.data.xml` — **per the STRICT XML TEMPLATE ENFORCEMENT hard rule, do NOT write this from memory. Copy [Boilerplate C](#boilerplate-c--workflowsname-uppercase_guidjsondataxml) verbatim** and string-replace the placeholders (`LOWERCASE_FLOW_GUID`, `FLOW_DISPLAY_NAME`, `FLOW_FILE_NAME`, `UPPERCASE_FLOW_GUID`, `STATE_CODE`/`STATUS_CODE`). For first deploys, use `STATE_CODE=0` and `STATUS_CODE=1` so the flow imports as Draft and doesn't fire until you turn it on.
 
-And add a RootComponent line to `Other/Solution.xml`:
+Register the flow in the solution — **do NOT regenerate `Other/Solution.xml` from scratch.** If the file already exists (e.g. you exported and unpacked an existing solution), perform a targeted Edit to add one new `<RootComponent>` line inside the existing `<RootComponents>` block:
 ```xml
-<RootComponent type="29" id="{<lowercase-guid>}" behavior="0" />
+<RootComponent type="29" id="{LOWERCASE_FLOW_GUID}" behavior="0" />
 ```
+If you are creating a brand-new solution and no `Other/Solution.xml` exists yet, copy [Boilerplate A](#boilerplate-a--othersolutionxml) verbatim and string-replace its placeholders. Same rule applies to `Other/Customizations.xml` — use [Boilerplate B](#boilerplate-b--othercustomizationsxml) and add one `<connectionreference>` block per connection reference shipping in the solution.
 
 ### 5.2 Parallel branches
 
@@ -1109,60 +1315,6 @@ git commit -m "<change summary> (Import <import-id>)"
 | Cloudmersive — HTML to PDF | `OpenApiConnection` / `ConvertDocumentToPdf` / `shared_cloudmersiveconvert` |
 
 Use this as a "did I get the host right?" cross-check while building — then confirm against the `power-automate-connectors` catalog per the HARD RULE.
-
----
-
-## 13. Defaults vs. asking — confirm alignment, default the mechanics
-
-**Asking the user to confirm direction is good** — it keeps the work aligned with intent, and the user welcomes it. The goal is **not to ask less**; it's to not spend questions on *mechanical* choices the skill already answers, so the questions you do ask are about what actually shapes the outcome. For the mechanical choices below, apply the default and *state what you chose* (the user can still redirect):
-
-| Decision | Default — use unless told otherwise |
-|---|---|
-| Solution packaging | Create a NEW unmanaged solution if none is specified |
-| Publisher prefix / solution name | Derive a sensible prefix + name; mention it, don't ask |
-| Flow initial state | Import as **Draft/Off** (`StateCode 0`) so it can't fire before review |
-| Connection binding | Leave the connection reference **unbound**; user binds it in the designer after import |
-| Build method | PAC file-based scaffold → pack → import (this skill's core loop) |
-| Action naming | Underscore-separated; stage-prefixed for long pipelines |
-| Email comment / importance / similar cosmetic fields | Pick a reasonable value, surface it for easy change |
-| `runAfter` status | `["Succeeded"]` unless a failure/timeout path is explicitly needed |
-| Condition robustness | Use null-safe, case-insensitive comparisons by default |
-
-**Always confirm with the user (these shape the outcome):**
-1. The **target environment** (you can't know which org/tenant).
-2. **Real business values you cannot invent** — recipient addresses, site/list URLs, list/library GUIDs, form IDs, approver emails. (Confirm an address that looks like a typo before hardcoding it.)
-3. **Irreversible / outward-facing confirmations** — sending real email, deleting a flow, importing to **production**.
-4. **Anything you're unsure matches their intent** — the logic/branching, what counts as success, edge-case handling. When in doubt, ask; a quick confirmation is cheaper than a wrong flow.
-
-Prefer to **batch questions into one round** rather than a slow trickle, but don't suppress a question just to avoid asking — staying aligned beats guessing.
-
-## 14. Verified deploy pattern — connection reference WITHOUT a RootComponent
-
-Confirmed working (pac 2.7.4, unmanaged import) for the "import the flow, let the user bind the connection in the designer afterward" model:
-
-- Declare the connection reference in `Other/Customizations.xml` inside a `<connectionreferences>` node, and **do NOT** add a `<RootComponent>` line for it. Only the workflow needs `<RootComponent type="29" id="{guid}" behavior="0" />`. Import creates the connection reference **unbound**; the user binds Office 365 (etc.) in the designer.
-  ```xml
-  <connectionreferences>
-    <connectionreference connectionreferencelogicalname="<prefix>_<name>">
-      <connectionreferencedisplayname>...</connectionreferencedisplayname>
-      <connectorid>/providers/Microsoft.PowerApps/apis/shared_office365</connectorid>
-      <iscustomizable>1</iscustomizable>
-      <statecode>0</statecode>
-      <statuscode>1</statuscode>
-    </connectionreference>
-  </connectionreferences>
-  ```
-  This avoids the connection-reference component-type number, which is **environment-specific and NOT a fixed constant** (it isn't in the standard `componenttype` optionset), so a hand-authored RootComponent `type` for a connection reference is unreliable.
-- The flow's `properties.connectionReferences` wrapper `connectionReferenceLogicalName` must exactly match `connectionreferencelogicalname` above, and the prefix must match the solution publisher's `<CustomizationPrefix>`.
-- Recognize this import failure: `Failed to find connection references with logical name(s) '<x>'. Create connection references with those names...` → you forgot the `<connectionreferences>` node (or the logical names don't match).
-
-**`pac env select` can crash** in some setups (`System.InvalidOperationException`, "non-recoverable error … will need to terminate"). Workaround: don't rely on the active profile — pass `--environment <org URL>` on each `pac solution export/import/list` command. Also, `pac` invoked from different shells may resolve to different installed versions; prefer the shell whose `pac` reports the newer version.
-
-## 15. "X is no longer present in the operation schema" — fix, don't blindly delete
-
-Mirror of the rule in the `power-automate-connectors` skill:
-- If `dataset`/`table` is **dynamic** → the schema can't resolve and *every* `item/...` is flagged; **hardcode `dataset`+`table`** (do not delete the fields).
-- If a **single key** genuinely isn't in the operation's schema → **remove that key**; if the value is still needed, look up the correct key from the live connector doc (Step 0) and use it.
 
 ---
 

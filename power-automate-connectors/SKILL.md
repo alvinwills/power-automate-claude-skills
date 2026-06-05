@@ -5,28 +5,6 @@ description: Authoritative reference of valid Power Automate connector actions (
 
 # Power Automate Connectors — Action Reference
 
-> ## 🔄 STEP 0 — VERIFY AGAINST LIVE MICROSOFT DOCS BEFORE USING THIS FILE
->
-> This catalog is a **fast local cache, and it drifts** — Microsoft adds, renames, and
-> re-versions connector operations continuously. Treat it as a hint, not the final word.
->
-> **At the START of any flow build/edit task, for EACH connector you will touch:**
-> 1. `WebFetch` that connector's official Microsoft Learn reference page (URLs at the bottom
->    of this file). Ask specifically for the `operationId` and parameter keys of the
->    operation(s) you intend to use.
-> 2. Confirm the live `operationId`, every parameter key (including flattened slash-keys like
->    `item/Title`, `emailMessage/To`), and the `apiId` match what you are about to write.
->    **The live page wins over this file.**
-> 3. If you find drift (a new op, a renamed key, a fresh V2/V3), **update this file in the same
->    session** so the cache stays current for next time.
-> 4. If WebFetch is unavailable, fall back to this file but **say so explicitly** and flag every
->    action you could not live-verify.
->
-> **Honest limitation:** a Markdown skill cannot auto-execute a fetch the moment it is "opened" —
-> Step 0 is a mandatory *first action you perform*, not something the file does by itself. To make
-> the fetch truly automatic on every flow-file edit, add a `PreToolUse` hook (see the
-> `update-config` skill) that triggers the doc fetch when a `Workflows/*.json` file is touched.
-
 ## THE RULE (read first)
 
 When creating or editing a Power Automate / Logic Apps flow definition:
@@ -40,7 +18,7 @@ When creating or editing a Power Automate / Logic Apps flow definition:
 2b. **`dataset` and `table` MUST be literal strings, never `@outputs('Compose_X')` or other expressions.** SharePoint (and Excel) actions with a `dynamic` `item`/schema parameter resolve their column schema *at design time* by reading `dataset`+`table`. If those are opaque expressions the designer can't resolve them → it flags every `item/...`/`parameters/...` field as "no longer present in the operation schema" and "X is required". Always hardcode the site URL and the **list/library GUID** (display names sometimes fail to resolve too — prefer the GUID, found at Site contents → list → List settings → URL `List=%7B<GUID>%7D`).
 2b-fix. **When the designer/save says "X is no longer present in the operation schema" — diagnose before deleting.** Two causes, two different fixes:
     - **Cause 1 — unresolved dynamic schema (most common):** `dataset`/`table` (SharePoint/Excel) is an expression, so the column list can't resolve and EVERY `item/...` field is flagged at once. **Do NOT remove the fields** — hardcode `dataset`+`table` as literal URL/GUID strings so the schema resolves (see 2b).
-    - **Cause 2 — a genuinely invalid/stale key:** the single key was renamed, never existed, or belongs to a different operation. **Remove that key from the action.** If the value still needs to land somewhere, look up the correct key on the live connector page (Step 0) and use that instead. A key the live schema doesn't list passes JSON validation but breaks at save/runtime — never keep it.
+    - **Cause 2 — a genuinely invalid/stale key:** the single key was renamed, never existed, or belongs to a different operation. **Remove that key from the action.** If the value still needs to land somewhere, look up the correct key on the live connector page and use that instead. A key the live schema doesn't list passes JSON validation but breaks at save/runtime — never keep it.
 2c. **Modern flow import conflict — "unpublished active row":** if a flow was edited in the designer (creating a draft) you cannot `pac solution import --force-overwrite` over it; you get `you are attempting to do a published update ... when there exists an unpublished active row`. `pac solution publish` does NOT clear modern-flow drafts. Fix: in make.powerautomate.com delete the flow (no run history lost if never run) or discard its draft, then re-import — it's recreated fresh.
 3. **`apiId` format:** `/providers/Microsoft.PowerApps/apis/shared_<connectorname>` — e.g. `shared_sharepointonline`, `shared_office365`, `shared_excelonlinebusiness`, `shared_approvals`, `shared_onedriveforbusiness`, `shared_microsoftforms`, `shared_office365users`.
 4. **Action shape (modern "OpenApiConnection"):**
